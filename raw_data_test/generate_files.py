@@ -25,6 +25,7 @@ def movememt_trial(step_size, length=121):
     for i in range(length-1):
         line = df.iloc[-1]
         movemnts_axis = i % 3
+        line[9+movemnts_axis] += step_size / 10 
         line[30+movemnts_axis] += step_size
         line[33+movemnts_axis] += step_size * 2
         df = df.append(line)
