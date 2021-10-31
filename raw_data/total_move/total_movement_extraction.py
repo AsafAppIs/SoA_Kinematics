@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import raw_data.configurations as cfg
 import raw_data.read_raw as read
-from raw_data.total_move.filtering import filter_exaggerated_movements, filter_extreme_movements
+from raw_data.total_move.filtering import filter_exaggerated_movements, filter_extreme_movements, filter_micro_movements
 from raw_data.total_move.movement_normalization import movement_hand_normalization 
 
 
@@ -41,15 +41,14 @@ def subject_total_movement(subject_kinematics, normalize=False):
     movement = all_trials_total_movement(subject_kinematics, normalize=normalize)
     # filter anomalies
     movement, num_exaggerated = filter_exaggerated_movements(subject_kinematics, movement)
-    
+    movement, num_micro = filter_micro_movements(subject_kinematics, movement)
     
     # filter extremes
-    #movement = all_trials_total_movement(subject_kinematics)
     movement, num_of_big, num_of_small = filter_extreme_movements(subject_kinematics, movement)
     
     # recreate movement array after filtering
     #movement = all_trials_total_movement(subject_kinematics)
-    return movement, (num_exaggerated, num_of_big, num_of_small)
+    return movement, (num_exaggerated, num_micro, num_of_big, num_of_small)
 
 
 
@@ -93,7 +92,7 @@ def trial_total_movement(trial_df, normalize=False):
         kinematic_points[i] = kinematic_points[i] ** 2
         kinematic_points[i] = np.sum(kinematic_points[i], axis=1)
         kinematic_points[i] = np.sqrt(kinematic_points[i])
-        kinematic_points[i] = np.sum(kinematic_points[i])
+        #kinematic_points[i] = np.sum(kinematic_points[i])
         
     
     return np.array(kinematic_points)

@@ -16,6 +16,8 @@ first_participants = [(1,x) for x in first_participants]
 second_participants  = [(2,x) for x in second_participants]
 all_participants = first_participants + second_participants 
 
-all_participants = all_participants[:6]
+
+#all_participants = [(1,98),(1,99)]
+#all_participants = all_participants[:6]
 
 num_of_std_from_mean = 3

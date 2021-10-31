@@ -18,9 +18,9 @@ def test_length_after_filtering(kinematic_data, result_len, result_trials):
     
     assert num_of_bad_trials[0] == result_trials
     
-    assert num_of_bad_trials[1] == 0
+    assert num_of_bad_trials[2] == 0
     
-    assert num_of_bad_trials[2] == result_trials * 2
+    assert num_of_bad_trials[1] == result_trials * 2
     
 
 @pytest.mark.parametrize("list_mode, result_con, result_obj",[(True,2,92),(False,180,21)])
@@ -56,10 +56,3 @@ def test_normalizing(kinematic_data, ratio):
     assert movement_stats[0,7] * ratio == pytest.approx(clean_movement_stats[0,7])
     
     
-def test_real_data_total_movement_stats():
-    movement_list = tm_extract.all_subjects_data(normalize=True)
-    for movement in movement_list:
-        movement_stats = tm_stats.total_movement_stats_calculation(movement)
-        
-        assert (movement_stats[0,8] - 3 * movement_stats[1,8]) > movement_stats[2,8]
-        

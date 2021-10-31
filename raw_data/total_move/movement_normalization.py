@@ -1,5 +1,5 @@
 import numpy as np
-
+import raw_data.configurations as cfg
 
 # this function gets a movement of a trial 
 def movement_hand_normalization(kinematic_data):
@@ -14,3 +14,5 @@ def movement_hand_normalization(kinematic_data):
     
     return kinematic_data
     
+
+
