@@ -73,16 +73,23 @@ def extract_answers(answers):
 # 1 - 3: temporal manipulation
 # 4 - 6: spatial manipulation
 # 7 - 9: anatomical manipulation 
-def extract_trial_type(trials):
+def extract_trial_type(trials, anatomical_data=False):
     # dictionary that map every manipulation to its representation
     label_dict = {0:0, .1:1, .2:2, .3:3, 6:4, 10:5, 14:6, 3:7, 4:8, 5:9}
     
+    # delete trials with anatomical manipulation
+    if not anatomical_data:
+        trials = trials[trials.iloc[:,7] == 0]
+        
     # calculate manipulation representation
     trials['manipulation type'] = trials.iloc[:, 4:8].sum(axis=1)
     trials['manipulation type'] = trials['manipulation type'].map(label_dict)
     
     # create output dataframe
     new_trials = trials.iloc[:,[1,9]]
+    
+    #rename column
+    new_trials = new_trials.rename(columns={1:"trial number"})
     
     return new_trials
 
@@ -143,3 +150,41 @@ def get_parsed_kinematic_data(experiment_num, participant_num):
     df, _ = split_kinematic_to_trials(k)
     
     return df
+
+# This function gets experiment number and index 
+# and returns list of tuples (trial_num, full_trial_dataframe)
+def get_integrated_information(experiment_num, participant_num):
+    # get raw data
+    kinematics, answers, trials = read_raw_data(experiment_num, participant_num)
+    
+    # split kinematics to trials
+    kinematics, num_of_fliped_hand = split_kinematic_to_trials(kinematics)
+    
+    # extract trial type
+    trial_type = extract_trial_type(trials)
+    
+    # extract answers
+    answers, num_of_no_answer = extract_answers(answers)
+    
+    # integrate
+    # define list that will contain indices to delete
+    to_delete = []
+    
+    for i, (idx, df) in enumerate(kinematics):
+        # if there is no answer or if trial is unavailale, we wil remove it later
+        if idx not in trial_type['trial number'].values or idx not in answers['trial number'].values:
+            to_delete.append(idx)
+            continue
+        
+        # extract current trial type
+        current_trial_type = trial_type[trial_type['trial number'] == idx]['manipulation type'].iloc[0]
+        
+        # extract current answer
+        current_answer = answers[answers['trial number'] == idx]['SoA answer'].iloc[0]
+        
+        # edit the data list
+        kinematics[i] = (idx, df, current_trial_type, current_answer)
+        
+    return kinematics
+        
+    

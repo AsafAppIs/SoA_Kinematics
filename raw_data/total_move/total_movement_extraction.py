@@ -92,7 +92,7 @@ def trial_total_movement(trial_df, normalize=False):
         kinematic_points[i] = kinematic_points[i] ** 2
         kinematic_points[i] = np.sum(kinematic_points[i], axis=1)
         kinematic_points[i] = np.sqrt(kinematic_points[i])
-        #kinematic_points[i] = np.sum(kinematic_points[i])
+        kinematic_points[i] = np.sum(kinematic_points[i])
         
     
     return np.array(kinematic_points)

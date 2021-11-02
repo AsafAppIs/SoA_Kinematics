@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['raw_data\\total_move\\total_movement_extraction.py', 'raw_data\\total_move\\filtering.py', 'raw_data\\total_move\\total_movement_stats.py', 'raw_data\\total_move\\total_movement_plots.py']
+recent_files = ['raw_data\\total_move\\total_movement_extraction.py', 'raw_data\\movement_filtering\\leap_filtering.py', 'raw_data\\movement_filtering\\filter.py', 'raw_data_test\\test_new_filter.py', 'raw_data\\hand_animation\\hand_animation.py']
 

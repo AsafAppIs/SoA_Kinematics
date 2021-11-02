@@ -3,7 +3,6 @@
 # 1) crazy hand: when the hand jump around -> located by total movement bigger then
 # 2) jump: the hand suddenly jump away from it place -> located by frame in which the total hand mocement is bigger then 12cm
 
-import pandas as pd
 import numpy as np
 from raw_data.movement_filtering.filter import filtering
 from raw_data.total_move.total_movement_extraction import trial_total_movement
@@ -12,7 +11,7 @@ from raw_data.normalization.hand_base_normalize import hand_base_normaliztion
 
 
 def crazy_movement_filtering(trial):
-    total_movement = np.sum(trial_total_movement(trial), axis=1)
+    total_movement = trial_total_movement(trial)
     return np.any(total_movement[total_movement > 1.5])
 
 
@@ -43,6 +42,7 @@ def leap_filtering(kinematics):
     return num_of_crazy, num_of_jumps 
 
 
-kinematic_data = read.get_parsed_kinematic_data(1, 15)
-hand_base_normaliztion(kinematic_data )
-num_of_crazy, num_of_jumps = leap_filtering(kinematic_data)
+if __name__ == "__main__":    
+    kinematic_data = read.get_parsed_kinematic_data(1, 15)
+    hand_base_normaliztion(kinematic_data )
+    num_of_crazy, num_of_jumps = leap_filtering(kinematic_data)

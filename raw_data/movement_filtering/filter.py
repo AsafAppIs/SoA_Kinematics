@@ -16,5 +16,5 @@ def filtering(subject_kinematics, filter_fun):
     for i in sorted(filter_lst, reverse=True):
         del subject_kinematics[i]
     
-    print(filter_lst)
+    #print(filter_lst)
     return num_of_filtered

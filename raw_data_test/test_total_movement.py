@@ -7,7 +7,7 @@ import raw_data.total_move.filtering as ftr
 
 @pytest.fixture
 def kinematic_data(request):
-    return read.get_parsed_kinematic_data(1, request.param)
+    return read.get_integrated_information(1, request.param)
 
 
 @pytest.mark.parametrize("kinematic_data, result_len, result_trials",[(98,92,2),(99,88,3)], indirect=['kinematic_data'])

@@ -7,9 +7,9 @@ from raw_data.total_move.movement_normalization import movement_hand_normalizati
 import raw_data.total_move.total_movement_extraction as tm_extract
  
 
-experiment_num = 1
-participant_num = 15
-trial_num = 35
+experiment_num = 2
+participant_num = 4
+trial_num = 6
 
 kinematic = get_parsed_kinematic_data(experiment_num, participant_num)
 #_ = tm_extract.subject_total_movement(kinematic, True)
@@ -61,12 +61,14 @@ def update(i):
         x2 = trial_x[i, line[1]]
         y2 = trial_y[i, line[1]]
         z2 = trial_z[i, line[1]]
-
         
-        ax.plot([x1, x2],[y1, y2],[z1, z2], color='b', marker="o", markersize=3)
+        col = 'b'
+        if line[1] in [5,6,7,8]:
+            col = 'r'
+        ax.plot([x1, x2],[y1, y2],[z1, z2], color=col, marker="o", markersize=3)
     time_text = ax.text(0.05, 0.95,.95,'',horizontalalignment='left',verticalalignment='top', transform=ax.transAxes)
     time_text.set_text(i)
-ani = anim.FuncAnimation(fig, update, interval=100, frames=len(trial), repeat=True)
+ani = anim.FuncAnimation(fig, update, interval=10, frames=len(trial), repeat=True)
 
 
 writer = anim.PillowWriter(fps=60)
