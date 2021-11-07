@@ -8,8 +8,8 @@ import raw_data.total_move.total_movement_extraction as tm_extract
  
 
 experiment_num = 2
-participant_num = 4
-trial_num = 6
+participant_num = 15
+trial_num = 36
 
 kinematic = get_parsed_kinematic_data(experiment_num, participant_num)
 #_ = tm_extract.subject_total_movement(kinematic, True)
@@ -68,7 +68,7 @@ def update(i):
         ax.plot([x1, x2],[y1, y2],[z1, z2], color=col, marker="o", markersize=3)
     time_text = ax.text(0.05, 0.95,.95,'',horizontalalignment='left',verticalalignment='top', transform=ax.transAxes)
     time_text.set_text(i)
-ani = anim.FuncAnimation(fig, update, interval=10, frames=len(trial), repeat=True)
+ani = anim.FuncAnimation(fig, update, interval=16, frames=len(trial), repeat=True)
 
 
 writer = anim.PillowWriter(fps=60)

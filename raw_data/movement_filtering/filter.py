@@ -5,7 +5,7 @@ def filtering(subject_kinematics, filter_fun):
     # create a list of indices for filtering
     filter_lst = []
     
-    for i, (_, trial) in enumerate(subject_kinematics):
+    for i, (_, trial, *args) in enumerate(subject_kinematics):
         if filter_fun(trial):
             filter_lst.append(i)
     

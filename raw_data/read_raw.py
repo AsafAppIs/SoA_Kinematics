@@ -152,7 +152,8 @@ def get_parsed_kinematic_data(experiment_num, participant_num):
     return df
 
 # This function gets experiment number and index 
-# and returns list of tuples (trial_num, full_trial_dataframe)
+# and returns list of tuples (trial_num, full_trial_dataframe) 
+# and number of data filtered trials (flip hand, no answer)
 def get_integrated_information(experiment_num, participant_num):
     # get raw data
     kinematics, answers, trials = read_raw_data(experiment_num, participant_num)
@@ -184,7 +185,10 @@ def get_integrated_information(experiment_num, participant_num):
         
         # edit the data list
         kinematics[i] = (idx, df, current_trial_type, current_answer)
-        
-    return kinematics
+    
+    # delete partial trials
+    kinematics = [trial for trial in kinematics if trial[0] not in to_delete]
+    
+    return kinematics, (num_of_fliped_hand, num_of_no_answer)
         
     

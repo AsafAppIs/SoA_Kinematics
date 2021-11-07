@@ -32,6 +32,13 @@ def jump_filtering(trial):
     return np.any(sum_movement[sum_movement>0.15])
 
 
+# filter trials with length outside the range of 119-121
+def trial_length_filter(trial):
+    return not(118 < len(trial) < 122)
+
+
+
+
 def leap_filtering(kinematics):
     # filter crazy trials
     num_of_crazy = filtering(kinematics, crazy_movement_filtering)
@@ -39,10 +46,16 @@ def leap_filtering(kinematics):
     # filter trials with jumps
     num_of_jumps = filtering(kinematics, jump_filtering)
     
-    return num_of_crazy, num_of_jumps 
+    # filter trials with unappropriate length
+    num_of_unappropriate_length = filtering(kinematics, trial_length_filter)
+    
+    return num_of_crazy, num_of_jumps, num_of_unappropriate_length
+
 
 
 if __name__ == "__main__":    
-    kinematic_data = read.get_parsed_kinematic_data(1, 15)
+    kinematic_data = read.get_parsed_kinematic_data(2, 36)
     hand_base_normaliztion(kinematic_data )
+    _, trial = kinematic_data[75]
+    #jump_filtering(trial)
     num_of_crazy, num_of_jumps = leap_filtering(kinematic_data)

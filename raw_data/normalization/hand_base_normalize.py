@@ -20,9 +20,9 @@ def movement_hand_normalization(kinematic_data):
 # this function gets kinemtaic data 
 # and normalize the data according to the hand base
 def hand_base_normaliztion(subject_kinematics):
-    for i, (idx, trialdf)in enumerate(subject_kinematics):
+    for i, (idx, trialdf, *args)in enumerate(subject_kinematics):
         
         normalized_data = movement_hand_normalization(trialdf.iloc[:,9:])
-        subject_kinematics[i] = (idx, pd.DataFrame(np.concatenate((trialdf.iloc[:,:9], normalized_data), axis=1)))
+        subject_kinematics[i] = (idx, pd.DataFrame(np.concatenate((trialdf.iloc[:,:9], normalized_data), axis=1)),*args )
         
         
