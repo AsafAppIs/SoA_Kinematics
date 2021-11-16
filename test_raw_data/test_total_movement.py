@@ -1,3 +1,4 @@
+'''
 # -*- coding: utf-8 -*-
 import pytest
 import raw_data.read_raw as read
@@ -56,3 +57,4 @@ def test_normalizing(kinematic_data, ratio):
     assert movement_stats[0,7] * ratio == pytest.approx(clean_movement_stats[0,7])
     
     
+'''
