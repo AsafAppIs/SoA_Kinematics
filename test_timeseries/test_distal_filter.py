@@ -1,13 +1,13 @@
 import numpy as np
 import pytest
 import timeseries_data.read_timeseries as rt
-import timeseries_data.util.filter_medial as fm
+import timeseries_data.util.util as ut
 import timeseries_data.configurations as cfg
 
 @pytest.mark.parametrize("num", [1,6,13,24,31,40])
 def test_distal_filter(num):
     data = rt.read_subject(num)
-    d_data = fm.subject_filter_medial(data)
+    d_data = ut.subject_filter_medial(data)
     
     data= np.array(data)
     

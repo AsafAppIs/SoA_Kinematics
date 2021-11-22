@@ -3,6 +3,7 @@ import timeseries_data.configurations as cfg
 from timeseries_data.mean_ts.trial_classifier import trial_classfier_creator
 from timeseries_data.read_timeseries import read_subject
 import timeseries_data.util.util as util
+import timeseries_data.util.soa_equal as equal
 
 # this function gets a subject timeseries data and classifier function
 # and return two lists of indices that represent the rows of the two classes
@@ -22,7 +23,7 @@ def subject_classifier(subject_data, classifier):
 
 # this function gets subject timeseries data and coniguration for classifier function
 # and return mean timesseries for both conditions of the classifier
-def conditional_mean_ts(subject_data, config=False, idx=0, class_dict=False):
+def conditional_mean_ts(subject_data, config=False, idx=0, class_dict=False, to_freq=False):
     # trnasfrom the subject data into ndarry
     subject_data = np.array(subject_data)
     
@@ -31,6 +32,14 @@ def conditional_mean_ts(subject_data, config=False, idx=0, class_dict=False):
     
     # extract the indices of the two trials
     first_class_idx, second_class_idx = subject_classifier(subject_data, classifier)
+    
+    # equalize number of trials in each group if the soa condition was choose
+    if config == "soa":
+        first_class_idx, second_class_idx = equal.soa_equalizer(subject_data, first_class_idx, second_class_idx)
+    
+    # transfrom to frequency domain if needed
+    if to_freq:
+        subject_data = util.subject_to_frequency(subject_data)
     
     # calculate means
     first_class_mean = np.mean(subject_data[first_class_idx], axis=0)
@@ -66,7 +75,6 @@ def all_mean_ts(config=False, idx=0, class_dict=False):
     second_lst = []
     
     for i in range(cfg.num_of_participants):
-        print(i)
         data = read_subject(i+1)
         data = util.subject_filter_medial(data)
         
@@ -102,4 +110,5 @@ def all_mean_ts(config=False, idx=0, class_dict=False):
     
     return first_class_mean, first_class_ste, second_class_mean, second_class_ste
         
+
 

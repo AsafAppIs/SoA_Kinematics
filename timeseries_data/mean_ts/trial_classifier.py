@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, seed
 
 # this function create a 'trial classifier' function that classifying trials into classes 
 # this function either gets a string that represent premade trial classification 
@@ -24,11 +24,19 @@ def trial_classfier_creator(config=False, idx=0, class_dict=False):
         class_dict = {0:0, 4:1, 5:1, 6:1}
     elif config == "random":
         idx = 0
-        
+      
+    
+    # seed for reproductability
+    #seed(10)
+    
     # define the classifier function
     def classifer(trial_header):
         if not idx:
             return randint(0, 1)
-        return class_dict.get(trial_header[idx], 2)
+        if isinstance(idx, int):
+            key = trial_header[idx]
+        else:
+            key = tuple(trial_header[idx])
+        return class_dict.get(key, 2)
     
     return classifer

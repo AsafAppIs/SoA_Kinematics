@@ -13,10 +13,11 @@ import timeseries_data.configurations as cfg
 
 if __name__ =="__main__":
     fun = cmp.correlation_ts
+    freq = True
     for j, conf in enumerate(cfg.class_configurations):
         for ts in range(11):
             file_name = cfg.class_configurations_names[j] + f" & {cfg.distal_names[ts]}.pdf"
-            pp = PdfPages(cfg.pdf_path + file_name)
+            pp = PdfPages(cfg.freq_pdf_path + file_name)
             
             fig = plt.figure(tight_layout=True)
             
@@ -25,18 +26,18 @@ if __name__ =="__main__":
                 data = util.subject_filter_medial(data)
                 
                 if isinstance(conf, tuple):
-                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, idx=conf[1], class_dict=conf[2])
+                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, idx=conf[1], class_dict=conf[2], to_freq=freq)
                 else:
-                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, config=conf)
+                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, config=conf, to_freq=freq)
             
-                first_ts = util.get_timeseries(first_class_mean, ts)
-                second_ts = util.get_timeseries(second_class_mean, ts)
+                first_ts = util.get_timeseries(first_class_mean, ts, is_freq=freq)
+                second_ts = util.get_timeseries(second_class_mean, ts, is_freq=freq)
                 
-                first_ts_se = util.get_timeseries(first_class_ste, ts)
-                second_ts_se = util.get_timeseries(second_class_ste, ts)
+                first_ts_se = util.get_timeseries(first_class_ste, ts, is_freq=freq)
+                second_ts_se = util.get_timeseries(second_class_ste, ts, is_freq=freq)
                 
                 ax = fig.add_subplot(5,5,i)
-                ax = plot_mean_with_error(first_ts, first_ts_se, second_ts, second_ts_se, title=f"participant {i}", ax=ax, small=True)
+                ax = plot_mean_with_error(first_ts, first_ts_se, second_ts, second_ts_se, title=f"participant {i}", ax=ax, small=True, is_freq=freq)
                 
             pp.savefig(fig)
             
@@ -47,18 +48,18 @@ if __name__ =="__main__":
                 data = util.subject_filter_medial(data)
                 
                 if isinstance(conf, tuple):
-                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, idx=conf[1], class_dict=conf[2])
+                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, idx=conf[1], class_dict=conf[2], to_freq=freq)
                 else:
-                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, config=conf)
+                    first_class_mean, first_class_ste, second_class_mean, second_class_ste = conditional_mean_ts(data, config=conf, to_freq=freq)
             
-                first_ts = util.get_timeseries(first_class_mean, ts)
-                second_ts = util.get_timeseries(second_class_mean, ts)
+                first_ts = util.get_timeseries(first_class_mean, ts, is_freq=freq)
+                second_ts = util.get_timeseries(second_class_mean, ts, is_freq=freq)
                 
-                first_ts_se = util.get_timeseries(first_class_ste, ts)
-                second_ts_se = util.get_timeseries(second_class_ste, ts)
+                first_ts_se = util.get_timeseries(first_class_ste, ts, is_freq=freq)
+                second_ts_se = util.get_timeseries(second_class_ste, ts, is_freq=freq)
                 
                 ax = fig.add_subplot(5,5,i-25)
-                ax = plot_mean_with_error(first_ts, first_ts_se, second_ts, second_ts_se, title=f"participant {i}", ax=ax, small=True)
+                ax = plot_mean_with_error(first_ts, first_ts_se, second_ts, second_ts_se, title=f"participant {i}", ax=ax, small=True, is_freq=freq)
                 
             pp.savefig(fig)
             

@@ -1,14 +1,19 @@
 import numpy as np
 import timeseries_data.configurations as cfg
+from scipy.fft import fft
+
 
 # that function gets ts representation of trial
 # split the different ts, and return a matrix in whice each line represent different ts
-def split(trial_ts):
+def split(trial_ts, is_freq=False):
+    # define timeseries length
+    length = int(cfg.ts_length/2) if is_freq else cfg.ts_length
+    
     # take only the kinematic data
     kinematics = trial_ts[cfg.header_size:]
     
     # split to rows
-    row_rep = kinematics.reshape((cfg.num_of_ts, cfg.ts_length))
+    row_rep = kinematics.reshape((-1, length))
     
     return row_rep
 
@@ -53,10 +58,49 @@ def subject_filter_medial(subject_data):
 
 # this function gets trial and timeseries index 
 # and return only the timeseries in the corresponding index
-def get_timeseries(line, idx):
-    # calculate offset
-    offset = len(line) % cfg.ts_length
-    start = offset + idx*cfg.ts_length
-    end = start + cfg.ts_length
-    return line[start:end]
+def get_timeseries(line, idx, is_freq=False):
+    # define timeseries length
+    length = int(cfg.ts_length/2) if is_freq else cfg.ts_length
     
+    # calculate offset
+    offset = len(line) % length
+    start = offset + idx*length
+    end = start + length
+    return line[start:end]
+
+
+# this function gets a signal and transform it into the frequency domain
+def to_frequency(signal):
+    yf = fft(signal)
+    yf[0] = 0
+    yf = abs(yf[:int(cfg.ts_length/2)])
+    
+    return yf
+
+
+# this function get a trial and transform each ts into frequency domain
+def trial_to_frequency(trial):
+    # split data to trials
+    ts_rows = split(trial)
+    
+    # transfrom to frequency
+    ts_freq = [to_frequency(row) for row in ts_rows]
+    
+    #concatenate
+    new_trial = np.concatenate(ts_freq)
+    new_trial = np.concatenate((trial[:cfg.header_size], new_trial))
+    
+    return new_trial 
+
+
+#  this function get a subject and transform each ts into frequency domain
+def subject_to_frequency(subject_data):
+    subject_data_freq = np.array(list(map(trial_to_frequency, subject_data)))
+    return subject_data_freq 
+    
+    
+
+
+def get_indices(data, trial_type, soa):
+    idx = np.where((data[:,1] == trial_type) & (data[:,2] == soa))
+    return idx[0]

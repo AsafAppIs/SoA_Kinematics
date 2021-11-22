@@ -1,6 +1,9 @@
 timeseries_path = "C:/Users/User/Documents/asaf/master workspace/Data/timeseries data/" 
 pdf_path = "C:/Users/User/Documents/asaf/master workspace/master_results/mean timeseries/" 
 
+freq_pdf_path = "C:/Users/User/Documents/asaf/master workspace/master_results/freq mean timeseries/" 
+permutation_path = "C:/Users/User/Documents/asaf/master workspace/master_results/permutation distribution/" 
+
 num_of_original_ts = 6
 ts_length = 120
 num_of_ts = 22
@@ -12,9 +15,15 @@ num_of_participants = 41
 
 distal_idx = [3,4,5,9,10,11,13,17,18,19,21]
 
-class_configurations = ["soa", "manipulation", "manipulation_t", "manipulation_s", "random",
-                        ("manipulation_min_t", 1, {0:0, 1:1}), ("manipulation_min_s", 1, {0:0, 4:1}),
-                        ("manipulation_max_t", 1, {0:0, 3:1}), ("manipulation_max_s", 1, {0:0, 6:1}),]
+class_configurations = ["soa", "manipulation", "manipulation_t", "manipulation_s", 
+                        ("manipulation_t1", 1, {0:0, 1:1}), ("manipulation_t2", 1, {0:0, 2:1}),("manipulation_t3", 1, {0:0, 3:1}),
+                        ("manipulation_s1", 1, {0:0, 4:1}), ("manipulation_s2", 1, {0:0, 5:1}),("manipulation_s3", 1, {0:0, 6:1}),
+                        ("unconsious manipulation t1", [1,2], {(0,1):0, (1,1):1}), ("unconsious manipulation t2", [1,2], {(0,1):0, (2,1):1}),
+                        ("unconsious manipulation s1", [1,2], {(0,1):0, (4,1):1}), ("unconsious manipulation s2", [1,2], {(0,1):0, (5,1):1}),
+                        ("internal unconsious manipulation t1", [1,2], {(1,0):0, (1,1):1}), ("internal unconsious manipulation t2", [1,2], {(2,0):0, (2,1):1}),
+                        ("internal unconsious manipulation s1", [1,2], {(4,0):0, (4,1):1}), ("internal unconsious manipulation s2", [1,2], {(5,0):0, (5,1):1}),
+                        ]
+#class_configurations = ["manipulation_t"]
 
 class_configurations_names = [x if isinstance(x, str) else x[0] for x in class_configurations ]
 
@@ -31,3 +40,7 @@ full_names = ['M_X_L', 'M_Y_L', 'M_Z_L',
 distal_names = ['D_X_L', 'D_Y_L', 'D_Z_L',
          'D_X_V', 'D_Y_V', 'D_Z_V', 'D_T_V',
          'D_X_A', 'D_Y_A', 'D_Z_A', 'D_T_A']
+
+
+SAMPLE_RATE = 60  # Hertz
+DURATION = 2  # Seconds

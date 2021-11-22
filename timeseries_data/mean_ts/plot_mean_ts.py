@@ -4,7 +4,10 @@ import seaborn as sns
 import timeseries_data.configurations as cfg
 
 
-def plot_mean_with_error(first_ts_mean, first_ts_ste, second_ts_mean, second_ts_ste, title="", ax=False, small=False):
+def plot_mean_with_error(first_ts_mean, first_ts_ste, second_ts_mean, second_ts_ste, title="", ax=False, small=False, is_freq=False):
+    # define timeseries length
+    length = int(cfg.ts_length/2) if is_freq else cfg.ts_length
+    
     font_title = 6 if small else 16
     font_label = 4 if small else 12
     font_def = 4 if small else 11
@@ -32,7 +35,7 @@ def plot_mean_with_error(first_ts_mean, first_ts_ste, second_ts_mean, second_ts_
     y_max  += max_std*3
     
     # x 
-    x = np.arange(0, cfg.ts_length)
+    x = np.arange(0, length)
     
     # plot first
     ax.plot(x, first_ts_mean, color='r', linewidth=line_width)
