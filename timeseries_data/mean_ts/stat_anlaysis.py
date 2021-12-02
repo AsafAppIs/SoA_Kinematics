@@ -1,11 +1,15 @@
 import numpy as np
+from scipy import stats
+
 import timeseries_data.mean_ts.ts_statistics as ts_stat
 from timeseries_data.mean_ts.subject_classifier import subject_classifier
 from timeseries_data.mean_ts.trial_classifier import trial_classfier_creator
 from timeseries_data.read_timeseries import read_subject
+from soa_stats.soa_stats import subject_agency_statistics
 import timeseries_data.util.util as util
 import timeseries_data.configurations as cfg
-from scipy import stats
+import timeseries_data.util.soa_equal as equal
+
 
 
 # this function gets subject data, function thats computes specific statistic property of trials 
@@ -21,7 +25,11 @@ def subject_statitical_analysis(subject_data, statistics_function, config=False,
 
     # extract the indices of the two trials
     first_class_idx, second_class_idx = subject_classifier(subject_data, classifier)
-
+    
+    # equalize number of trials in each group if the soa condition was choose
+    if config == "soa":
+        first_class_idx, second_class_idx = equal.soa_equalizer(subject_data, first_class_idx, second_class_idx)
+    
     # compute statistics
     first_class = [statistics_function(trial) for trial in subject_data[first_class_idx]]
     second_class = [statistics_function(trial) for trial in subject_data[second_class_idx]]
@@ -52,8 +60,8 @@ def all_statistical_comparison(statistics_function, config=False, idx=0, class_d
         mean_results[i,1] = np.mean(second_class)
     
     # delete nan values
-    mean_results = mean_results[~np.isnan(mean_results).any(axis=1)]
-    
+    # mean_results = mean_results[~np.isnan(mean_results).any(axis=1)]
+    x=1
     return mean_results
 
 
@@ -65,11 +73,154 @@ def calculate_stats(mean_results):
     return pval, mean_diff
 
 
-def statistical_tests():
+def subject_statistic_and_agency():
+    # create a list to contain subjects data
+    subjects_data = []
+    for i in range(cfg.num_of_participants):
+        print(i)
+        # create list to contain subject data
+        subject_data = []
+        # read data
+        data = read_subject(i+1)
+        data = util.subject_filter_medial(data) 
+        
+        # calculate statistic difference for various data splits
+        for j, conf in enumerate(cfg.class_configurations[:11]):
+            # first calculation, 50:80 in the y axis location
+            # create statistics function
+            ts_num = 1
+            start=50
+            end=80
+            y_loc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+            
+            # calculate the statistic
+            if isinstance(conf, tuple):
+                first_class, second_class = subject_statitical_analysis(data, y_loc_statistics_function, idx=conf[1], class_dict=conf[2])
+            else:
+                first_class, second_class = subject_statitical_analysis(data, y_loc_statistics_function, config=conf)
+             
+            # add difference
+            subject_data.append(np.mean(first_class) - np.mean(second_class))
+            
+            
+            # second calculation, 50:80 in the z axis location
+            
+            # create statistics function
+            ts_num = 2
+            start=50
+            end=80
+            z_loc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+            
+            # calculate the statistic
+            if isinstance(conf, tuple):
+                first_class, second_class = subject_statitical_analysis(data, z_loc_statistics_function, idx=conf[1], class_dict=conf[2])
+            else:
+                first_class, second_class = subject_statitical_analysis(data, z_loc_statistics_function, config=conf)
+             
+            # add difference
+            subject_data.append(np.mean(first_class) - np.mean(second_class))
+            
+            
+            # third calculation, 40:70 in total acceleration timeseries
+            
+            # create statistics function
+            ts_num = 10
+            start=40
+            end=70
+            total_acc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+            
+            # calculate the statistic
+            if isinstance(conf, tuple):
+                first_class, second_class = subject_statitical_analysis(data, total_acc_statistics_function, idx=conf[1], class_dict=conf[2])
+            else:
+                first_class, second_class = subject_statitical_analysis(data, total_acc_statistics_function, config=conf)
+             
+            # add difference
+            subject_data.append(np.mean(first_class) - np.mean(second_class))
+            
+            
+        # add agency statistics
+        subject_data.extend(subject_agency_statistics(data))
+        
+        # add subject to the big list
+        subjects_data.append(subject_data)
+        
+    return subjects_data
+
+def statistical_tables():
     # create list to contain results
     results = []
     
     for i, conf in enumerate(cfg.class_configurations):
+        print(i)
+        # create list to contain specific split results, created with the line name in it
+        split_results = []
+        
+        # first calculation, 50:80 in the y axis location
+        
+        # create statistics function
+        ts_num = 1
+        start=50
+        end=80
+        y_loc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+        
+        # calculate the statistic
+        if isinstance(conf, tuple):
+            mean_results = all_statistical_comparison(y_loc_statistics_function, idx=conf[1], class_dict=conf[2])
+        else:
+            mean_results = all_statistical_comparison(y_loc_statistics_function, config=conf)
+        
+        split_results.append(mean_results[:,0])
+        split_results.append(mean_results[:,1])
+        
+        
+        # second calculation, 50:80 in the z axis location
+        
+        # create statistics function
+        ts_num = 2
+        start=50
+        end=80
+        z_loc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+        
+        # calculate the statistic
+        if isinstance(conf, tuple):
+            mean_results = all_statistical_comparison(z_loc_statistics_function, idx=conf[1], class_dict=conf[2])
+        else:
+            mean_results = all_statistical_comparison(z_loc_statistics_function, config=conf)
+        
+        split_results.append(mean_results[:,0])
+        split_results.append(mean_results[:,1])
+        
+        # third calculation, 40:70 in total acceleration timeseries
+        
+        # create statistics function
+        ts_num = 10
+        start=40
+        end=70
+        total_acc_statistics_function = ts_stat.part_trial_mean_creator(ts_num, start, end)
+        
+        # calculate the statistic
+        if isinstance(conf, tuple):
+            mean_results = all_statistical_comparison(total_acc_statistics_function, idx=conf[1], class_dict=conf[2])
+        else:
+            mean_results = all_statistical_comparison(total_acc_statistics_function, config=conf)
+        
+        split_results.append(mean_results[:,0])
+        split_results.append(mean_results[:,1])
+        
+        
+        # add all to the results list
+        results.append(np.array(split_results))
+        
+    return results
+
+
+
+def statistical_tests():
+    # create list to contain results
+    results = []
+    
+    for i, conf in enumerate(cfg.class_configurations[17:18]):
         print(i)
         # create list to contain specific split results, created with the line name in it
         split_results = [cfg.class_configurations_names[i]]
@@ -135,8 +286,8 @@ def statistical_tests():
         
     return results
 
-        
-#statistical_tests()         
+x = subject_statistic_and_agency()
+       
         
 
 if __name__ == "_main__":

@@ -12,7 +12,7 @@ def trial_classfier_creator(config=False, idx=0, class_dict=False):
     # define the dict and the idx according to the configuration string, if defined
     if config == "soa":
         idx = 2
-        class_dict = {0:0, 1:1}
+        class_dict = {0:1, 1:0}
     elif config == "manipulation":
         idx = 1
         class_dict = {0:0, 1:1, 2:1, 3:1, 4:1, 5:1, 6:1}

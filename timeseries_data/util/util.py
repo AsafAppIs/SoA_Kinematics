@@ -104,3 +104,20 @@ def subject_to_frequency(subject_data):
 def get_indices(data, trial_type, soa):
     idx = np.where((data[:,1] == trial_type) & (data[:,2] == soa))
     return idx[0]
+
+
+
+
+# this function create a 'trial filter' function that filter trials from subject data
+# this function gets index and dictionary to create custom filtering function
+# the function return a filter thats return True for desireable trials anf False for undesireable trials 
+def trial_filter_creator(idx=0, class_dict=False):    
+    # define the classifier function
+    def trial_filter(trial_header):
+        if isinstance(idx, int):
+            key = trial_header[idx]
+        else:
+            key = tuple(trial_header[idx])
+        return class_dict.get(key, False)
+    
+    return trial_filter

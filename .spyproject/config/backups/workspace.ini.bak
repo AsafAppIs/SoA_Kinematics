@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['timeseries_data\\mean_ts\\subject_classifier.py', 'timeseries_data\\util\\soa_equal.py', 'timeseries_data\\util\\util.py', 'test_timeseries\\test_equalize.py', 'test_timeseries\\test_mean_classifier.py']
+recent_files = ['timeseries_data\\mean_ts\\subject_classifier.py', 'timeseries_data\\util\\soa_equal.py', 'timeseries_data\\util\\util.py', 'timeseries_data\\statistical_tests\\permutation_distribution.py', 'timeseries_data\\mean_ts\\stat_anlaysis.py', 'timeseries_data\\mean_ts\\trial_classifier.py', 'timeseries_data\\configurations.py']
 

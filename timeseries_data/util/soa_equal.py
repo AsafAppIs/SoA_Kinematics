@@ -71,9 +71,9 @@ def soa_equalizer(subject_data, idx1, idx2):
         elif diff == 0:
             continue
         elif diff > 0:
-            idx2 += bootstrap_trials(subject_data, i, 1, diff)
+            idx2 += bootstrap_trials(subject_data, i, 0, diff)
         elif diff < 0:
-            idx1 += bootstrap_trials(subject_data, i, 0, -diff)
+            idx1 += bootstrap_trials(subject_data, i, 1, -diff)
             
     return idx1, idx2
         
