@@ -7,6 +7,7 @@ import random
 import timeseries_data.configurations as cfg
 from timeseries_data.mean_ts.subject_classifier import subject_classifier
 from timeseries_data.mean_ts.trial_classifier import trial_classfier_creator
+import timeseries_data.util.soa_equal as equal
 
 
 def auc_calculator(data, index1, index2, measure_idx):
@@ -17,7 +18,7 @@ def auc_calculator(data, index1, index2, measure_idx):
     # calclate real measure index
     actual_idx = cfg.header_size+measure_idx
     
-    new_data = np.array([(data[i, actual_idx], 1) if (i in index1) else (data[i, actual_idx], 0) if (i in index2) else -1 
+    new_data = np.array([(data[i, actual_idx], 0) if (i in index1) else (data[i, actual_idx], 1) if (i in index2) else -1 
                          for i in range(len(data))], dtype=np.object)
     new_data = np.array([x for x in new_data if x is not -1], dtype=np.float32)
     
@@ -26,8 +27,7 @@ def auc_calculator(data, index1, index2, measure_idx):
     weight2 = len(index2) / len(new_data)
     
     index1_array = new_data[:, 1]
-    weight_array = np.array([weight1 if index1_array[i]else weight2 for i in range(len(new_data))])
-    #weight_array = np.array([1 if index1_array[i] else 1 for i in range(len(new_data))])
+    weight_array = np.array([weight1 if index1_array[i] else weight2 for i in range(len(new_data))])
 
     measure_data = new_data[:, 0]
     
@@ -49,13 +49,15 @@ def permutation_auc(permutations = 1000, config=False, idx=0, class_dict=False):
         classifier = trial_classfier_creator(config=config, idx=idx, class_dict=class_dict)
         # calculate indices
         first_class_idx, second_class_idx = subject_classifier(data, classifier)
+        if config == "soa":
+            first_class_idx, second_class_idx = equal.soa_equalizer_down(data, first_class_idx, second_class_idx)
         all_idx = first_class_idx + second_class_idx 
         split = int(len(all_idx)/2)
         for k in range(permutations):
             random.shuffle(all_idx)
             idx1 = all_idx[:split]
             idx2 = all_idx[split:]
-            auc = [auc_calculator(data, idx1, idx2, i) for i in range(3)]
+            auc = [auc_calculator(data, idx1, idx2, i) for i in range(5)]
             results.append(auc)
             
     return np.array(results)
@@ -69,6 +71,7 @@ def subject_auc(subject_num):
     data = np.array(data)
     
     for i, conf in enumerate(cfg.class_configurations[:14]):
+        
         # create calculator
         if isinstance(conf, tuple):
             classifier = trial_classfier_creator(idx=conf[1], class_dict=conf[2])
@@ -77,12 +80,18 @@ def subject_auc(subject_num):
 
         # calculate indices
         first_class_idx, second_class_idx = subject_classifier(data, classifier)
-        
+        if conf == "soa":
+            first_class_idx, second_class_idx = equal.soa_equalizer_down(data, first_class_idx, second_class_idx)
         # calculate auc for all kinematic measures
-        auc = [auc_calculator(data, first_class_idx, second_class_idx, i) for i in range(3)]
+        auc = [auc_calculator(data, first_class_idx, second_class_idx, i) for i in range(5)]
         
         # add this split results to results list
         results.extend(auc)
+        
+        # soa destroy the data, so will read the data again
+        if conf == "soa":
+            data = pd.read_csv(cfg.special_feature_path + "participant" + str(subject_num) + ".csv", header=None)
+            data = np.array(data)
     
     return results
 

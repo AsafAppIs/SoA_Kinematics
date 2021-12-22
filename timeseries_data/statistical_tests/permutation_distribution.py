@@ -7,6 +7,10 @@ from timeseries_data.mean_ts.subject_classifier import conditional_mean_ts, all_
 import timeseries_data.util.util as util
 
 
+# this function gets participant number, distance function and number of permutations
+# the function split the participant data randomly many times (according to the number of permutations)
+# and for each split it compute the distance (according to the distance function) for each timeseries 
+# the function return 2d ndarray with distance between randomly split ts in specific participant
 def create_distribution(participant_num, distance_function, num_of_permutations):
     # read participant data
     data = read_subject(participant_num)

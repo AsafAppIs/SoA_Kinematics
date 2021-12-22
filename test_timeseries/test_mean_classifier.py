@@ -8,8 +8,8 @@ from timeseries_data.mean_ts.trial_classifier import trial_classfier_creator
 
 
 @pytest.mark.parametrize("participant_num, a_no, a_yes, m_no, m_yes, m_t, m_s, m_1, m_2, m_5, m_6",
-                         [(1, 171, 83, 83, 171, 85, 86, 30, 28, 29, 28),
-                          (33, 131, 101, 60, 172, 86, 86, 30, 27, 27, 30)])
+                         [(1, 83, 171, 83, 171, 85, 86, 30, 28, 29, 28),
+                          (33, 101, 131, 60, 172, 86, 86, 30, 27, 27, 30)])
 def test_mean_classifier(participant_num, a_no, a_yes, m_no, m_yes, m_t, m_s, m_1, m_2, m_5, m_6):
     data = rt.read_subject(participant_num)
     data = np.array(data)

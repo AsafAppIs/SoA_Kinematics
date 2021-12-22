@@ -100,7 +100,8 @@ def subject_to_frequency(subject_data):
     
     
 
-
+# this function gets subject data, trial type and soa indicators
+# and return indices of trials that match the trial type and the soa answer 
 def get_indices(data, trial_type, soa):
     idx = np.where((data[:,1] == trial_type) & (data[:,2] == soa))
     return idx[0]

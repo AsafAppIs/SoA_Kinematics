@@ -6,7 +6,7 @@ import timeseries_data.util.util as util
 # and return matrix of comparison between all timeseries with respect to different classifications 
 def timeseries_compare(subject_data, comparison_fun):
     # define a matrix in shape of num_of_comparisonsXnum_of_ts
-    num_of_ts = int((subject_data.shape[1] - 3) / cfg.ts_length)
+    num_of_ts = int((subject_data.shape[1] - cfg.header_size) / cfg.ts_length)
     num_of_comparisons = len(cfg.class_configurations)
     match_matrix = np.zeros((num_of_comparisons, num_of_ts))
     

@@ -1,22 +1,15 @@
+from matplotlib.backends.backend_pdf import PdfPages
+import matplotlib.pyplot as plt
+import timeseries_data.configurations as cfg
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import timeseries_data.configurations as cfg
 
-def plot_scatter_trials_by_type(subject_num):
+
+
+def scatter_trials_by_type(subject_num, ax):
     data = pd.read_csv(cfg.special_feature_path + "participant" + str(subject_num) + ".csv", header=None)
     data_types = [data[data.iloc[:,1] == i] for i in range(7)]
     
-    fig, ax = plt.subplots(figsize=(30,5), ncols=3)
-    
-    fig.subplots_adjust(left=0.2,
-            bottom=0.2, 
-            right=0.8, 
-            top=0.8, 
-            wspace=0.3, 
-            hspace=.2)
-
     for i in range(7):
         df = data_types[i]
         agency = df[df.iloc[:,2] == 1]
@@ -44,8 +37,28 @@ def plot_scatter_trials_by_type(subject_num):
         ax[i].set_xticklabels(["","no manipulation", "100ms", "200ms", "300ms", "6deg", "10deg", "14deg"], fontsize=8, rotation=45)
     
     
-    return data_types
 
 
 
-plot_scatter_trials_by_type(23)
+if __name__ =="__main__":
+    file_name = "participants.pdf"
+    pp = PdfPages(cfg.scatter_path + file_name)
+    fig = plt.figure(tight_layout=True, figsize=(30, 175))
+    
+
+    for i in range(cfg.num_of_participants):
+        ax1 = fig.add_subplot(41,3,1 + (i*3))
+        ax2 = fig.add_subplot(41,3,2 + (i*3))
+        ax3 = fig.add_subplot(41,3,3 + (i*3))
+    
+        scatter_trials_by_type(i+1, np.array([ax1,ax2,ax3]))
+    
+    fig.subplots_adjust(left=0.125,
+            bottom=0.2, 
+            right=0.8, 
+            top=0.8, 
+            wspace=0.2, 
+            hspace=14)
+
+    pp.savefig(fig)
+    pp.close()       

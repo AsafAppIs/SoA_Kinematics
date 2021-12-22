@@ -1,10 +1,13 @@
 timeseries_path = "C:/Users/User/Documents/asaf/master workspace/Data/timeseries data/" 
+fake_timeseries_path = "C:/Users/User/Documents/asaf/master workspace/Data/fake timeseries data/" 
+
 pdf_path = "C:/Users/User/Documents/asaf/master workspace/master_results/mean timeseries/" 
 sensitivity_path = "C:/Users/User/Documents/asaf/master workspace/master_results/sensitivity/" 
 freq_pdf_path = "C:/Users/User/Documents/asaf/master workspace/master_results/freq mean timeseries/" 
 permutation_path = "C:/Users/User/Documents/asaf/master workspace/master_results/permutation distribution/" 
 special_feature_path = "C:/Users/User/Documents/asaf/master workspace/Data/special feature data/" 
 auc_path = "C:/Users/User/Documents/asaf/master workspace/master_results/auc stats/" 
+scatter_path = "C:/Users/User/Documents/asaf/master workspace/master_results/trials_scatter/" 
 
 num_of_original_ts = 6
 ts_length = 120

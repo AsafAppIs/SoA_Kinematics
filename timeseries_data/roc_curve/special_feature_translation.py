@@ -29,7 +29,7 @@ def to_special_features(subject_data):
     second_feature   = np.reshape(second_feature , (-1, 1))
     
     
-    # calculate the first feature
+    # calculate the third feature
     ts_num = 10
     start=40
     end=70
@@ -38,10 +38,25 @@ def to_special_features(subject_data):
     third_feature = np.array([fun(trial) for trial in subject_data])
     third_feature = np.reshape(third_feature, (-1, 1))
 
-
-    new_representation = np.concatenate([subject_data[:, :cfg.header_size], first_feature, second_feature
-                                         , third_feature], axis=1)    
+ 
+    # calculate the fourth feature - slow return in frames y_loc
+    ts_num = 1
+    fun = ts_stat.derivative_peak_distance(ts_num)
     
+    fourth_feature = np.array([fun(trial) for trial in subject_data])
+    fourth_feature = np.reshape(fourth_feature, (-1, 1))
+    
+    
+    # calculate the fourth feature - slow return in frames z_loc
+    ts_num = 2
+    fun = ts_stat.derivative_peak_distance(ts_num)
+    
+    fifth_feature = np.array([fun(trial) for trial in subject_data])
+    fifth_feature = np.reshape(fifth_feature, (-1, 1))
+    
+    new_representation = np.concatenate([subject_data[:, :cfg.header_size], first_feature, second_feature
+                                         , third_feature, fourth_feature, fifth_feature], axis=1)    
+
     return new_representation 
 
 
