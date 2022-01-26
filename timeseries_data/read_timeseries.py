@@ -11,7 +11,7 @@ def read_subject(participant, test=False):
     # define the path to the appropriate participant
     path = cfg.timeseries_path + "participant" + str(participant) + ".csv" if not test else cfg.fake_timeseries_path + "participant" + str(participant) + ".csv" 
     
-    # raed the data
+    # read the data
     data = pd.read_csv(path, header=None)
         
     return data 

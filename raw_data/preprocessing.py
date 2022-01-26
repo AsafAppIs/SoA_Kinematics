@@ -31,7 +31,7 @@ def preprocess_subject(experiment_num, participant_num):
     return kinematic_representation
 
 
-if __name__ == "__main__":
+if __name__ == "__mai__":
     idx_counter = 1
     for experiment, participant in cfg.all_participants:
         kinematic_representation = preprocess_subject(experiment, participant)
@@ -42,5 +42,4 @@ if __name__ == "__main__":
         path = cfg.kinematic_path+"participant"+str(idx_counter)+".csv"
         np.savetxt(path, kinematic_representation, delimiter=',')
         idx_counter += 1
-        
         

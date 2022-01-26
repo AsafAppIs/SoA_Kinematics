@@ -57,7 +57,7 @@ def subject_to_timeseries(kinematic_data):
 
 
 if __name__ == "__main__":
-    for i in range(1, cfg.num_of_participants + 1):
+    for i in range(201, 205):
         print(f"process participant {i}")
         kinematic_representation = read_subject(i)
         timeseries_representation = subject_to_timeseries(kinematic_representation)

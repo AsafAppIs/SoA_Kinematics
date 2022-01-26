@@ -11,6 +11,10 @@ def create_path(experiment_num, participant_num):
     
     #create path to the right experiment
     experiment_path = cfg.first_data if experiment_num == 1 else cfg.second_data
+    
+    # if experiment number is -1, change the path to the fake directory
+    experiment_path = cfg.faked_data
+    
     experiment_path = os.path.join(cfg.data_path, experiment_path)
     
     #create path to the right participat
